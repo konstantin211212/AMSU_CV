@@ -75,3 +75,22 @@ read_and_modify_one_block_of_yaml_data(final_path_yaml,
                                        os.path.join(path_work, "new_" + configure_yaml),
                                        key='names', value=["None"])
 
+
+for file in os.listdir(path_work + "\\train\labels\\"):
+    if file.endswith(".txt"):
+        with open(path_work + "\\train\labels\\" + file, "r+", encoding="UTF-8") as label_file:
+            text = label_file.readlines()
+            #print(text)
+            new_text = []
+            # классы указываются пока вручную в коде
+            list_num_remove = tuple("2 5 7".split())
+            if text:
+                for line in text:
+                    if not line.startswith(list_num_remove):
+                        #print(line)
+                        new_text.append(line)
+                label_file.seek(0)
+                label_file.truncate(0)
+                label_file.writelines(new_text)
+                # разметка классов перезаписывается без указанных в list_num_remove классов
+            label_file.close()
