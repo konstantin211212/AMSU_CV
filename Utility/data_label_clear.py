@@ -47,20 +47,20 @@ def read_and_modify_one_block_of_yaml_data(filename, write_file, key, value):
         for i, j in enumerate(data[f'{key}']):
             print(i, j)
 
-        print("Введите через пробел номера классов - которые нужно УДАЛИТЬ из датасета")
-        num_for_delete = list(map(lambda x: int(x), input().split()))
-        new_item_list = []
-        for i, j in enumerate(data[f'{key}']):
-            if i not in num_for_delete:
-                new_item_list.append(j)
-        print(data)
-        data[f'{key}'] = f'{new_item_list}'
-        #daa[f'{key}'] = f'{value}'
-
-        print(data)
-    with open(f'{write_file}', 'w') as file:
-        yaml.dump(data,file,sort_keys=False)
-    print('done!')
+    #     print("Введите через пробел номера классов - которые нужно УДАЛИТЬ из датасета")
+    #     num_for_delete = list(map(lambda x: int(x), input().split()))
+    #     new_item_list = []
+    #     for i, j in enumerate(data[f'{key}']):
+    #         if i not in num_for_delete:
+    #             new_item_list.append(j)
+    #     print(data)
+    #     data[f'{key}'] = f'{new_item_list}'
+    #     #daa[f'{key}'] = f'{value}'
+    #
+    #     print(data)
+    # with open(f'{write_file}', 'w') as file:
+    #     yaml.dump(data,file,sort_keys=False)
+    # print('done!')
 
 configure_yaml = ""
 path_work = os.getcwd()
@@ -75,20 +75,23 @@ read_and_modify_one_block_of_yaml_data(final_path_yaml,
                                        os.path.join(path_work, "new_" + configure_yaml),
                                        key='names', value=["None"])
 
+list_num_remove = tuple(input("Введите номера классов через пробел для удаления из labels.txt : ").split())
 
-for file in os.listdir(path_work + "\\train\labels\\"):
+for file in os.listdir(path_work + "\\train\\annotations\\"):
     if file.endswith(".txt"):
-        with open(path_work + "\\train\labels\\" + file, "r+", encoding="UTF-8") as label_file:
+        with open(path_work + "\\train\\annotations\\" + file, "r+", encoding="UTF-8") as label_file:
             text = label_file.readlines()
             #print(text)
             new_text = []
             # классы указываются пока вручную в коде
-            list_num_remove = tuple("2 5 7".split())
+
             if text:
                 for line in text:
                     if not line.startswith(list_num_remove):
                         #print(line)
                         new_text.append(line)
+                    else:
+                        print("Delete: ", line)
                 label_file.seek(0)
                 label_file.truncate(0)
                 label_file.writelines(new_text)
